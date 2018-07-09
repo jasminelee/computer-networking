@@ -1,0 +1,101 @@
+ICN 1.1: Networked Applications
+ - Dominant model is the bidirectional byte stream model. One side reads what the other writes. Operates in both directions. Either side can close the connection, e.g. "connection reset by peer"; server closes connection when browser doesn't expect it.
+    - World Wide Web (WWW) is HTTP: client opens command to server using HTTP verbs like GET. server responds with an HTTP status code. 
+        - HTTP is document-centric. Response is human-readable, e.g. status code, body. 
+        - BitTorrent: client requests documents from other clients. A group of clients is called a swarm. If a client wants to download a file, it downloads a torrent file via HTTP from the worldwideweb (WWW) which leads to the Tracker.  Gets the list of clients in swarm from Tracker. Dense graph of clients dynamically exchanging data. 
+        - Skype: caller opens connection to recipient. Unlike web's client and server, it's two personal computers talking to each other. if you're behind a NAT, you can open connections to the internet, but others connect open connections easily to you. NAT makes it hard for two PC's to talk to each other
+            - Rendezvous server allows for reverse connections. so if client A wants to call client B, and client A isn't behind a NAT but client B is, client A makes a request to the Rendezvous server which notifies Client B about the request from A. Client B will then call/open conn to Client A. Reverse connection is from B to A; makes it such that Client A calls Client B by making Client B call client A. 
+            - If both clients are behind NATs, both talk to each other via a Relay server
+            - TLDR; allows users not behind a NAT to call users behind a NAT
+ - WWW/HTTP: client-server model
+ - BitTorrent: swarms of clients open connections to each other
+ - Skype: a mix of the two. clients try to go peer-to-peer and when they cannot, use other clients to do so via Relay or Rendezvous servers
+
+
+ICN 1.2: The Four Layer Internet Model
+- describes the hierarchy of the internet. 
+    - Link carries data between nodes/routers one link/hop at a time
+    - Network. network packets are called datagrams. Network layer delivers datagrams end-to-end. routers are at the network layers. packets travel in hops via link from network node to network node. must use Internet Protocol. 
+        - Internet Protocol (IP). IP datagrams can get lost, be delivered out of order, and can corrupted. best effort delivery, no guarantees. 
+            - IP is referred to as the "thin waist" of the internet bc it's the only protocol used at the network layer where as there are several used at the transport layer (TCP, UDP, RTP) and link layers (ethernet, wifi, DSL, 3g)
+    - Transport layer guarantees order, purity, etc ^. controls congestion.
+        - TCP: Transmission Control Protocol. puts packets in order and ensures reliability. provides a service to the Application to ensure data is delivered directly. 
+        - UDP: User Datagram Protocol
+    - Application layer want reliable byte streams between two endpoints. bi-directional between two apps using app-specific semantics, e.g. http, bit-torrent. 
+- 7-layer OSI (Open Systems Interconnection) model is replaced by 4-layer model. so won't be detailed in this course. 
+
+ICN 1.3: The IP Service Model
+- Datagrams contains Data, source address, and destination address. 
+    - hop-by-hop routing. analogous to snail mail: mail hops from office to office to the final destination. 
+- Unreliable. packets will be dropped only if necessary due to congestion. duplicates by mistake. makes no guarantees.
+- Best effort. 
+- Connectionless: packets might be mis-sequenced
+- IP service intentionally simple to make it easier to build and maintain. 
+    - end-to-end principle: features and intelligence should be at the endpoints in software instead of in hardware. should be at the source and destination addresses, and not at the network. 
+    - allows for reliable servies to be built on top
+    - works on top of any link layer. IP makes few assumptions about the link layer below. 
+- it's possible for a forwarding table on a router to be wrong, which could lead to infinitely looping packets. so IP service model keeps a TTL for packets. limits flood of endlessly looking packets.
+- header checksum to reduce chances of delivering datagram to wrong desination (security). IP service model also will fragment packets if they're too long.
+- IPv4 Datagram: destination IP address, source IP address, Protocol ID for how to process/parse the packet (e.g. TCP?), version (IPv4 vs IPv6), total packet lenth, TTL, fragment offeset (For multiple datagrams that should be together), type of service (how important a packet is?), checksum to ensure packet isn't delivered to the wrong destination 
+
+
+ICN 1.4: Life of a Packet
+- application: stream of data. transport: segments of data. network: packets of data
+- TCP Byte Stream uses a 3-way handshake. 
+    1. Client synchronizes, "sync", w/ Server
+    2. Server synchronizes and acknowledges, "sync/ack" w/ Client
+    3. Client acknowkledges "ack"
+- Network delivers packets to computers. Transport delivers data to applications. 
+    Need two addresses:
+    - IP address is the network layer address to deliver packets to computer
+    - TCP Port is the transport layer address. tells computer software which application to deliver data too 
+- use the following to see how many hops it takes for a request to go:
+    - $ traceroute -w 1 <url>
+
+ICN 1.5: Packet switching principle
+- independently for each arriving packet, send it along a link. 
+- two consequences:
+    1. simple packet forwarding. 
+    2. efficient sharing of links
+- a flow is a set of datagrams belonging to the same end-to-end communication, e.g a TCP connection
+- packet switches don't need state for each flow. each packet is self contained. packets are forwarded independently and don't need to know about flows.
+- data traffic is bursty. we load a page, and stop. download something, and stop. other ppl can use link capacity when I'm not. its called statistical multiplexing. packet switching is efficient: lets us share capacity among many flows sharing a link. 
+
+ICN 1.6: Layering principle
+- layers are functional components. they communciate sequentially w/ the layers above and below. each layer provides a well-defined service to the layer above using the services by layer below and its own private processing. clear separation of concerns. each layer can be improved indepedently of its dependencies and clients/things that rely on it.
+- breaking layer boundaries is costly. tension between loss of flexibility and cross-layer optimizations. 
+- reasons for layering: modularity, well defined, reuse, separation of concerns, continuous improvement.
+
+ICN 1.7: Encapsulation principle
+- encapsulation combines layering and packet switching. organizes info in packets so we can maintain layers. takes protocol layers and lets them share the storage in a packet. 
+- HTTP web app response is the payload for:
+    - a TCP transport segment which is the payload for:
+        - an IP network packet which is the payload for:
+            - a wifi link
+- encapsulation is flexibility and allows recursive layering.
+    - e.g. VPN: 
+
+ICN 1.8a: Byte order
+- if two parties need to communicate, they need to agree how messages are formatted and arranged. 
+- little endian vs big endian (the more human readable one)
+- different processors have different endianness
+    - all internet protocols use big endian. most significant byte comes first
+- use functions e.g. htons, ntohs(), htonl(), etc to write networking code that's independent of processor architecture. be rigorous of converting between host and network order. decide on a principled approach of converting code
+- 
+
+https://lagunita.stanford.edu/courses/Engineering/Networking-SP/SelfPaced/courseware/ac9d1eef5aaa4bb5bcfe4d42f51f0f5b/b98b85f380ec4eafa46569c07278ec54/?child=first
+
+https://my.bradfieldcs.com/networking/2018-07/
+
+
+What happens when I type www.google.com into my browser's URL bar and hit enter?
+
+A DNS will figure out the IP of that hostname and go to that server. It will then send that server the query. The host/Google server will then process that query. It will be handled by several servers, all of whom talk to each other in a Google-specific cluster that's not on the publicly available internet. Then it will be sent back to the original user. 
+
+How do protocols from different layers interact? What assumptions do they make of one another?
+
+
+Why are there so many protocols available at some layers, and few at others?
+
+
+What hardware and software enables the Internet, and which layers of protocol does each interact with?
