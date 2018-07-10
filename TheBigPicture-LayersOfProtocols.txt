@@ -99,3 +99,17 @@ Why are there so many protocols available at some layers, and few at others?
 
 
 What hardware and software enables the Internet, and which layers of protocol does each interact with?
+
+Class 1:
+    - TCP vs UDP. udp is more used for streaming
+    - how do lookup tables get updated? automatically
+    - what is a mac address?
+    - spdy (google's http2). where they tested it on chrome
+    - Berkeley Sockets: an abstraction for two processes on different machine to connect w/ each other
+
+every pair is one byte of data
+
+#! is the magic number. the first two byte values
+
+- parse bytes that give version number
+- number of packets
