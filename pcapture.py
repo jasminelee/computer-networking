@@ -1,6 +1,10 @@
 import binascii
 import struct
 
+"""
+https://my.bradfieldcs.com/networking/2018-07/overview-exercise/
+"""
+
 with open("net.cap", "rb") as f:
     magic_number_bytes = f.read(4)
     magic_number = binascii.hexlify(magic_number_bytes)
@@ -18,6 +22,7 @@ with open("net.cap", "rb") as f:
 
     num_packets = 0
     while byte != "":
+        # pre-packet header
         byte = f.read(4)  # timestamp
         if byte == "":
             break
@@ -33,6 +38,9 @@ with open("net.cap", "rb") as f:
         if captured_length_in_bytes != untruncated_length_in_bytes:
             print "Packet was truncated"
 
+        print captured_length_in_bytes
+
+        # packet data
         while captured_length_in_bytes > 0:
             byte = f.read(1)  # read one number of bytes at a time
             captured_length_in_bytes -= 1
