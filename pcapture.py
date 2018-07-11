@@ -14,30 +14,27 @@ with open("net.cap", "rb") as f:
     timezone_offset_bytes = f.read(4)
     timezone_accuracy_bytes = f.read(4)
     snapshot_length_bytes = f.read(4)
-    link_layer_bytes = f.read(4)
+    byte = f.read(4)  # link-layer
 
-    byte = link_layer_bytes
     num_packets = 0
     while byte != "":
         byte = f.read(4)  # timestamp
+        if byte == "":
+            break
         byte = f.read(4)  # timestamp in ms
-        packet_length_bytes = f.read(4)  # num_bytes
-        packet_length_in_bytes = struct.unpack(
-            "<I", packet_length_bytes)  # number of bytes in packet
-        packet_length_in_bytes = packet_length_in_bytes[0]
+        byte = f.read(4)  # length of captured packet data
+        captured_length_in_bytes = struct.unpack(
+            "<I", byte)  # number of bytes in packet
+        captured_length_in_bytes = captured_length_in_bytes[0]
+        byte = f.read(4)  # Un-truncated length of the packet data
+        untruncated_length_in_bytes = struct.unpack("<I", byte)
+        untruncated_length_in_bytes = untruncated_length_in_bytes[0]
 
-        while packet_length_in_bytes > 0:
-            f.read(1)  # read one number of bytes at a time
-            packet_length_in_bytes -= 1
-        # Un-truncated length of the packet data
-        byte = f.read(4)
+        if captured_length_in_bytes != untruncated_length_in_bytes:
+            print "Packet was truncated"
+
+        while captured_length_in_bytes > 0:
+            byte = f.read(1)  # read one number of bytes at a time
+            captured_length_in_bytes -= 1
         num_packets += 1
-
-    print "num_packets: {}".format(num_packets)
-    # magic_number = struct.unpack('<I', byte)
-    # print magic_number
-
-    # while byte != "":
-    #     # Do stuff with byte.
-    #     byte = f.read(1)
-    #     print binascii.hexlify(byte)
+    assert num_packets == 99
