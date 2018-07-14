@@ -39,13 +39,35 @@ with open("net.cap", "rb") as f:
             print "Packet was truncated"
 
         # parsing the ethernet headers
-        mac_header_bytes = f.read(14)  # mac header is 14 bytes
-        # print MAC source and destination
-        # go into payload and get ip versions
-        captured_length_in_bytes -= 14
+        # mac header is 14 bytes
+        preamble_delimiter = f.read(8)
 
+        destination_mac_address_bytes1 = f.read(4)
+        destination_mac_address1 = struct.unpack(
+            "<I", destination_mac_address_bytes1)[0]
+        destination_mac_address_bytes2 = f.read(2)
+        destination_mac_address2 = struct.unpack(
+            "<H", destination_mac_address_bytes2)[0]
+        print "MAC destination: ", destination_mac_address1, destination_mac_address2
+
+        source_mac_address_bytes1 = f.read(4)
+        source_mac_address1 = struct.unpack(
+            "<I", source_mac_address_bytes1)[0]
+
+        source_mac_address_bytes2 = f.read(2)
+        source_mac_address2 = struct.unpack(
+            "<H", source_mac_address_bytes2)[0]
+        # print "MAC source: ", source_mac_address1, source_mac_address2
+
+        ether_type = f.read(2)
+
+        # go into payload and get ip versions
+        captured_length_in_bytes -= 22
+# print "Number in bytes in the rest of the packet
+# {}".format(captured_length_in_bytes)
         while captured_length_in_bytes > 0:
             captured_length_in_bytes -= 1
+            f.read(1)
 
         num_packets += 1
     assert num_packets == 99
