@@ -62,12 +62,21 @@ with open("net.cap", "rb") as f:
         ether_type = f.read(2)
 
         # go into payload and get ip versions
-        captured_length_in_bytes -= 22
-# print "Number in bytes in the rest of the packet
-# {}".format(captured_length_in_bytes)
+        version_field_header_length_bytes = f.read(1)
+        version_field_header_length = struct.unpack(
+            "<B", version_field_header_length_bytes)[0]
+        version_field_header_length = str(version_field_header_length)
+        version_field = version_field_header_length[:len(
+            version_field_header_length) / 2]
+        header_length = version_field_header_length[
+            len(version_field_header_length) / 2:]
+        # print "IP version: {}".format(version_field)
+        captured_length_in_bytes -= 23
+
+        # print "Number in bytes in the rest of the packet
+        # {}".format(captured_length_in_bytes)
         while captured_length_in_bytes > 0:
             captured_length_in_bytes -= 1
             f.read(1)
-
         num_packets += 1
     assert num_packets == 99
