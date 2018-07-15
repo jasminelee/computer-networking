@@ -1,0 +1,30 @@
+ICN 5.5 HyperText Transfer Protocol (HTTP 1.1):
+- HyperText: text that contains links to other texts.
+- WorldWideWeb (HTTP). HTTP is all human readable. 
+- carriage return: go to the beginning of the line. 
+- browsers cache pages. 304 Not Modified
+- HTTP: request/response API. text protocol, human readable, document-centric.
+- HTTP/1.0: latency is 50 ms. request size: 1 full segment, response is 2 segments. segment packetization delay: 10 ms. reply is 20 ms. 
+- server closes connection after response 
+
+ICN 5.6 HTTP/1.1
+- loading a single page takes 230 ms. clients take a lot of time opening connections.
+- HTTP 1.1 has Connection header for requests which has a keep-alive field that tells the server to keep the conn open bc client is going torequest more. close tells server to close the conn. server can always ignore. 
+	- Connection header available in the response too. server can tell client whether it's keeping the conn open or closed, and for how long
+- Http/1.0 vs 1.1 is much faster bc after the first request is open, requests can be sent back to back without having to open new connections
+- SPDY: a new protocol by Google to speed up the web. is basis for HTTP/2.0:
+	- request pipelining. server can send things while other things are being loaded.
+	- removes redundant headers. only sends things like browser header once at the beginning of the session, rather than the entire time
+
+- HTTP 1.0 and 1.1 are called “text based protocols”, HTTP 2 is a “binary protocol”, what is the difference?
+	- the difference is binary is faster bc its more terse
+- HTTP specifies using TCP as the underlying transport layer protocol. Why might the designers of HTTP have specified a particular transport layer protocol, and why pick TCP? Does this mean that it’s not possible to send HTTP data over UDP? What is an example of an HTTP header that effectively requires TCP?
+	- HTTP uses TCP isntead of UDP bc TCP is in-order. UDP does not guarantee ordering. HTTP can run on UDP though 
+	- default port is TCP 80
+- How are cookies transmitted? What is their format? In loading a single web page, how many cookies might be sent?
+	- HTTP cookies are small files cached in the browser. they track activities. a cookie-enabled site will put a cookie on your computer that will track your session. 
+	- cookies remember stateful info for the stateless HTTP protocol
+- Which HTTP headers might have significant performance implications?
+	- HTTP cache headers
+
+	

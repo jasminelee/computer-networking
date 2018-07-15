@@ -75,18 +75,19 @@ with open("net.cap", "rb") as f:
             len(version_field_header_length) / 2:]
         IP_header_length = int(IP_header_length) % 0xff
         IP_header_length *= 4
-        # print "header_length: {}".format(header_length)
+        # print "IP_header_length: {}".format(IP_header_length)
 
         differentiated_services = f.read(1)
         total_length_bytes = f.read(2)
-        total_length = struct.unpack("<H", total_length_bytes)[0]
-
+        # length of datagram payload
+        total_length = struct.unpack("<H", total_length_bytes)[
+            0]
         id_field = f.read(2)
         offset_field = f.read(2)
         ttl = f.read(1)
         protocol_field_bytes = f.read(1)
         protocol_field = struct.unpack("<B", protocol_field_bytes)[0]
-        # print "protocol", protocol_field
+        print "protocol", protocol_field
         # assert protocol_field == 6
 
         header_checksum = f.read(2)
@@ -96,6 +97,8 @@ with open("net.cap", "rb") as f:
         # print "Source IP: {}, destination IP: {}".format(source_IP,
         # destination_IP)
         captured_length_in_bytes -= 42
+
+        # if IP_header_length > 5:
 
         # print "Number in bytes in the rest of the packet
         # {}".format(captured_length_in_bytes)

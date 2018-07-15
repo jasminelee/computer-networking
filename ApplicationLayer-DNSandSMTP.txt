@@ -1,0 +1,60 @@
+https://lagunita.stanford.edu/courses/Engineering/Networking-SP/SelfPaced/courseware/73a5ed540f8c4498b8b1816a8e5302cd/92c92d6662eb423997f867de980d795c/?child=first
+
+ICN 5.8 DNS and SMTP
+- parsing a url: http://jasmineflee.com/index.html.
+- application protocol and port is http://, jasmineflee.com is the host, /index.html is the file 
+- rather than type a human readable hostname, can write IP address into browser url bar
+- Domain Name System (DNS) maps hostnames to addresses (more than just IP addresses). handles huge number of records, 2^32 ip addresses (ipv4). must have distributed control, e.g. berkeley can manage their own names and microsoft can manage microsoft.com. DNS must be robust individual node failures so if one host goes down then others remain alive
+- DNS Design
+	- read-only or read-mostly db. hosts look up names much more often than they update them
+	- loose consistency. changes can take a little while to propagate. 
+	- extensive caching. can look up a name, and keep result around for a long time for other ppl/requests to use 
+- DNS Name Architecture
+	- a tree structure. root is dot. Top level domain (tld) is edu, com, org. then domain names, e.g. berkeley.edu, google.com. and another sub layer, e.g. www.cs.berkeley.edu. maps.google.com
+	- hierarchical zones. each zone can be separately administered. each zone served from several replicated servers; there are many servers that serve berkeley's name. 
+	- root zone: 13 servers. a computer comes up, asks which top level domain it is, then domain names, then possible sub layer.
+	- ppl try often to ddos the root servers. they fail bc root servers are robust
+- DNS Query. two types:
+	- recursive. asks server to resolve the entire query. 
+	- non-recursive. asks server to resolve one step of the query at a time.
+	- client asks resolver a recursive query. resolver can either returned cached response if it exists, or runs non-recrusive queries to root, domain server, top level domain server, one at a time. 
+	- security vulnerability: hackers can put in resolver's cache the wrong host for the site a user is requesting
+- A host can use TCP to query a DNS resolver.
+
+ICN 5.9 DNS Names and Addresses
+- all DNS messages are represented as Resource Records (RRs):
+	- name: domain name, e.g. www.berkeley.edu
+	- TTL
+	- class: address class, usually IN 1 (internet)
+	- type of record
+	- rdata: resource data dependent on type
+- 2 critical RR types: type A (Ipv4) and NS (name server records)
+	- A record tells you ann IP address associated w/ a name
+	- an NS record tells you a nameserver associated w/ a name
+- a DNS message structure. see RFC 1035
+	- contains a Header, Question, Answer, Authority, Additional
+- dig <hostname> sends a DNS query to the hostname.
+- DNS A Record (address record)
+- DNS NS Record (name server record)	
+- DNS does a lot of name compression bc everything needs to fit in 512 bytes. 
+	- DNS breaks names into labels, e.g. www.berkeley.edu is three labels: www, berkeley, and edu. 
+- DNS responses are compressed
+- if a name server goes down, there's probably another one available. 
+
+ICN 5.10 DNS Details
+- client makes a recursive query to the resolver which makes a series of non-recursive queries to the root level server, top level domains, second level domains (e.g. berkeley.edu, baidu.cn., etc), sub-domains e.g. cs.berkeley.edu (where .cs is the sub-domain)
+	- e.g. http://www.inetdaemon.com/img/dns-hierarchy.gif
+- traversing zones
+	- an NS record (the name server record of a domain contains a host name)
+	- dig for the nameserver of cs.berkeley.edu. the names under ANSWER section are the nameserver. 
+- types of DNS records:
+	- A record (address record, which is an IP)
+	- NS record
+	- CNAME record: canonical name record. tells you a name is an alias
+	- MX records: maileXchange record. tells you mail server for a domain. 
+		- MX record causes A record processing. e.g. if you ask what's the MX record, then it will return the name of server for mail and the A record for that server. 
+		- pointing MX records at aliases forces another layer of indirection in the DNS hierarchy. 
+		- a query for the MX record for a domain name may return the same IP address as the query for the A record for the same domain name
+	- many other kinds of records: also TXT (arbitrary text records), AAAA (ipv6 address record)
+
+
