@@ -34,8 +34,8 @@ ICN 5.9 DNS Names and Addresses
 - a DNS message structure. see RFC 1035
 	- contains a Header, Question, Answer, Authority, Additional
 - dig <hostname> sends a DNS query to the hostname.
-- DNS A Record (address record)
-- DNS NS Record (name server record)	
+- DNS A Record (address record). 
+- DNS NS Record (name server record). 	
 - DNS does a lot of name compression bc everything needs to fit in 512 bytes. 
 	- DNS breaks names into labels, e.g. www.berkeley.edu is three labels: www, berkeley, and edu. 
 - DNS responses are compressed
@@ -48,9 +48,9 @@ ICN 5.10 DNS Details
 	- an NS record (the name server record of a domain contains a host name)
 	- dig for the nameserver of cs.berkeley.edu. the names under ANSWER section are the nameserver. 
 - types of DNS records:
-	- A record (address record, which is an IP)
-	- NS record
-	- CNAME record: canonical name record. tells you a name is an alias
+	- A record (address record, which is an IP). name to IP
+	- NS record. name to server
+	- CNAME record: canonical name record. tells you a name is an alias. name to name.
 	- MX records: maileXchange record. tells you mail server for a domain. 
 		- MX record causes A record processing. e.g. if you ask what's the MX record, then it will return the name of server for mail and the A record for that server. 
 		- pointing MX records at aliases forces another layer of indirection in the DNS hierarchy. 
@@ -58,3 +58,25 @@ ICN 5.10 DNS Details
 	- many other kinds of records: also TXT (arbitrary text records), AAAA (ipv6 address record)
 
 
+Class 3 - Application Layer: DNS and SMTP
+	- difference between the internet and the www?
+	- authoritative server is the nameserver (DNS Server) that holds the actual DNS records (A, CNAME, PTR, etc) for a particular domain/ address.
+	- authoratative server would be godaddy which gets NS record from .com/TLD and then ?. two steps godaddy would do:
+		- pointer from authortative to server i'm running
+		- pointer from authortative to tld 
+	- a request to DNS server via UDP in order to get IP of requested site needs to be made before the actual HTTP request via TCP is made. so two blocking calls
+	- TTL can't be set arbitrarily low else its slow for users. should be set high
+	- recursive query: client goes to the resolver, which goes to root which returns an NS record, resolver goes to tld which returns an authoritative server, resolver then goes to authoritative and returns the host
+	- nslookup is an older, worse version of dig
+		- use dig to figure out what servers are serving responses
+	- man 3 printf
+	- man 2 bind
+	- man 2 socket
+		- part 2 of the manual
+	- man 2 send
+	- man 2 recv 
+	- 
+python socket lib are wrappers around the below system calls:	
+# system call to create a socket
+# use bind to associate process with a port
+# send data to dns server using send
