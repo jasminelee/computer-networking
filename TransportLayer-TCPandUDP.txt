@@ -1,0 +1,32 @@
+https://lagunita.stanford.edu/courses/Engineering/Networking-SP/SelfPaced/courseware/c43cc41ee5764363b36ddd99c8b32f26/d519552b8bd3421bb7cc8e30b7c6745b/
+
+ICN 2.0 Transport
+- TCP is a reliable, end-to-end, bi-directional byte stream. 95% of all internet apps use this
+- UDP: simple, unreliable datagrams
+
+ICN 2.1 TCP service model
+- Transmission Control Protocol (TCP)
+    - Link frame contains IP datagram which contains tcp segment which contains application byte stream
+    - peer TCP layers communicate. TCP connection is between two hosts set up via a 3-way handshake: syn, syn-ack, and ack. 
+    - TCP "stream of bytes" service, can be a static html page or a stream of real-time video camera data. 
+        - TCP sender and receiver hosts work together to ensure data is sent in order
+    - connection teardown: fin, ack. A can tell B it's ready to close the connection. B can respond with its leftover data until it sends a fin to A which then acks back and fully closes the conn.
+- Reliable delivery
+    - acknowledgements indicate correct delivery
+    - checksums detect corrupted data. 
+    - sequence numbers detect missing data
+    - flow-control prevents overrunning receiver. in TCP, receiver tells sender whether it can keep sending
+- TCP controls congestion 
+- TCP segment format
+    - web data is port 80 (see IANA port numbers)
+- Port demultiplexing
+    - at the receiver, the TCP layer accepts datagrams from network layer and then delivers the datagrams to their respective sockets and eventually, the respective processes
+- a socket is a software interface between Application and Transport layers. when a process sends a message, the message has to pass the socket to reach the Transport layer. 
+
+ICN 2.2: UDP (User datagram protocol) service model
+- UDP datagram is simple. has 4 fields in its header instead of 10 like TCP has. 
+- connectionless datagram service
+- unreliable. no acknowledgements, no flow control, no mechanism to detect missing or missequenced datagrams
+- most video streaming uses TCP instead of UDP bc HTTP is built on top of TCP
+
+ICN 2.3: ICMP service model

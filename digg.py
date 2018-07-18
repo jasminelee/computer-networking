@@ -20,3 +20,6 @@ open a socket, bind to it, send a request, and see it in wireshark
 """
 # def digg(site):
 
+
+# figure out what the format of the query is. is it a 32 bit address?
+# 
