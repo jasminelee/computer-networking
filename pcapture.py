@@ -38,9 +38,7 @@ with open("net.cap", "rb") as f:
         if captured_length_in_bytes != untruncated_length_in_bytes:
             print "Packet was truncated"
 
-        # parsing the ethernet headers
-        # mac header is 14 bytes
-        preamble_delimiter = f.read(8)
+        # # parsing the layer 2 ethernet frame
 
         destination_mac_address_bytes1 = f.read(4)
         destination_mac_address1 = struct.unpack(
@@ -48,8 +46,7 @@ with open("net.cap", "rb") as f:
         destination_mac_address_bytes2 = f.read(2)
         destination_mac_address2 = struct.unpack(
             "<H", destination_mac_address_bytes2)[0]
-        # print "MAC destination: ", destination_mac_address1,
-        # destination_mac_address2
+        # print "MAC destination: ", destination_mac_address1, destination_mac_address2
 
         source_mac_address_bytes1 = f.read(4)
         source_mac_address1 = struct.unpack(
@@ -62,20 +59,22 @@ with open("net.cap", "rb") as f:
 
         ether_type = f.read(2)
 
-        # go into payload and get ip versions and IP header lengths
+        # IP Header. go into payload and get ip versions and IP header lengths
         version_field_header_length_bytes = f.read(1)
         version_field_header_length = struct.unpack(
             "<B", version_field_header_length_bytes)[0]
         version_field_header_length = str(version_field_header_length)
+        # print version_field_header_length
         version_field = version_field_header_length[:len(
             version_field_header_length) / 2]
-        assert version_field == "4" or version_field == "6"
+        print "version field:" + version_field
+        # assert version_field == "4" or version_field == "6"
 
         IP_header_length = version_field_header_length[
             len(version_field_header_length) / 2:]
         IP_header_length = int(IP_header_length) % 0xff
         IP_header_length *= 4
-        # print "IP_header_length: {}".format(IP_header_length)
+        print "IP_header_length: {}".format(IP_header_length)
 
         differentiated_services = f.read(1)
         total_length_bytes = f.read(2)
@@ -87,7 +86,7 @@ with open("net.cap", "rb") as f:
         ttl = f.read(1)
         protocol_field_bytes = f.read(1)
         protocol_field = struct.unpack("<B", protocol_field_bytes)[0]
-        print "protocol", protocol_field
+        # print "protocol", protocol_field
         # assert protocol_field == 6
 
         header_checksum = f.read(2)
@@ -95,8 +94,8 @@ with open("net.cap", "rb") as f:
         destination_IP = struct.unpack("<I", f.read(4))[0]
 
         # should be the same two IPS
-        print "Source IP: {}, destination IP: {}".format(source_IP,destination_IP)
-        captured_length_in_bytes -= 42
+        # print "Source IP: {}, destination IP: {}".format(source_IP, destination_IP)
+        captured_length_in_bytes -= 34
 
         # if IP_header_length > 5:
 

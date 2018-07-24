@@ -64,4 +64,4 @@ $ifconfig en0
 ARP protocol maps IP addresses to MAC addresses
 AS - autonomous system
 sock_raw to get raw sockets
-
+https://my.bradfieldcs.com/networking/2018-07/network-layer-exercise/
