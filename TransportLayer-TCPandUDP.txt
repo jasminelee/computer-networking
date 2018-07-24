@@ -22,11 +22,39 @@ ICN 2.1 TCP service model
 - Port demultiplexing
     - at the receiver, the TCP layer accepts datagrams from network layer and then delivers the datagrams to their respective sockets and eventually, the respective processes
 - a socket is a software interface between Application and Transport layers. when a process sends a message, the message has to pass the socket to reach the Transport layer. 
+- a checksum is the number of correct bytes. 
+    - checksums algorithm uses ones complement
+- speed of light cost associated with decentralized, blockchain systems?
+- stop and wait vs sliding window
+    - 
 
 ICN 2.2: UDP (User datagram protocol) service model
 - UDP datagram is simple. has 4 fields in its header instead of 10 like TCP has. 
 - connectionless datagram service
 - unreliable. no acknowledgements, no flow control, no mechanism to detect missing or missequenced datagrams
 - most video streaming uses TCP instead of UDP bc HTTP is built on top of TCP
+- UDP is considered a demultiplexer bc it receives things and has to choose which port it should go to
 
 ICN 2.3: ICMP service model
+- Internet Control Message Protocol is a Tranport layer protocol that sets on top of the Network. 
+- Network Layer: 
+    - IP. hop-by-hop delivery from end to end
+    - Routing Tables. algos to populate router forwarding tables
+    - ICMP. communicates network layer info between end hosts and routers. 
+- ICMP service model
+    - contains a self-contained message reporting error
+    - is unreliable. simple. no retries.
+- ICMP packet is inside an IP datagram
+- traceroute tells you which path was taken by packets, and how long
+    - UDP is encapsulated in IP datagram. 
+- "ping" and "traceroute" both rely on ICMP
+
+Class 4 
+mux is shorthand for multiplexer 
+
+https://my.bradfieldcs.com/networking/2018-07/transport-layer-exercise/
+- nc -l -u <port netcat is listening on>
+
+use sockets within a python try finally bc the finally will close the socket after the program starts. otherwise, the binding will be stored in RAM and kept alive. will need to kill process individually or clean up in python program. 
+
+Class 5

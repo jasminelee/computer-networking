@@ -80,3 +80,10 @@ python socket lib are wrappers around the below system calls:
 # system call to create a socket
 # use bind to associate process with a port
 # send data to dns server using send
+
+Class 4: SMTP cont'd
+- client uses IMAP/POP to query user's mail server. senders/other users use SMTP and send request to receiver user's mail server 
+
+https://mailcatcher.me/
+
+

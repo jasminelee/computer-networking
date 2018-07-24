@@ -94,8 +94,8 @@ with open("net.cap", "rb") as f:
         source_IP = struct.unpack("<I", f.read(4))[0]
         destination_IP = struct.unpack("<I", f.read(4))[0]
 
-        # print "Source IP: {}, destination IP: {}".format(source_IP,
-        # destination_IP)
+        # should be the same two IPS
+        print "Source IP: {}, destination IP: {}".format(source_IP,destination_IP)
         captured_length_in_bytes -= 42
 
         # if IP_header_length > 5:
