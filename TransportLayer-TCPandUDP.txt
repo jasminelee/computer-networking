@@ -58,3 +58,10 @@ https://my.bradfieldcs.com/networking/2018-07/transport-layer-exercise/
 use sockets within a python try finally bc the finally will close the socket after the program starts. otherwise, the binding will be stored in RAM and kept alive. will need to kill process individually or clean up in python program. 
 
 Class 5
+DHCP
+MAc address is the link layer address
+$ifconfig en0
+ARP protocol maps IP addresses to MAC addresses
+AS - autonomous system
+sock_raw to get raw sockets
+
