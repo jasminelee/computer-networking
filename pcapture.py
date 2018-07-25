@@ -47,21 +47,9 @@ with open("net.cap", "rb") as f:
         assert captured_length_in_bytes == untruncated_length_in_bytes
 
         # # parsing the layer 2 ethernet frame
-
-        destination_mac_address1 = struct.unpack(
-            "<I", f.read(4))[0]
-        destination_mac_address2 = struct.unpack(
-            "<H", f.read(2))[0]
-        # print "MAC destination: ", destination_mac_address1, destination_mac_address2
-
-        source_mac_address1 = struct.unpack(
-            "<I", f.read(4))[0]
-        source_mac_address2 = struct.unpack(
-            "<H", f.read(2))[0]
-        # print "MAC source: ", source_mac_address1, source_mac_address2
-
-        ether_type = struct.unpack("<H", f.read(2))[0]
-        # print "ether_type: {}".format(ether_type)
+        dest, source, ether_type = struct.unpack('<6s6sH', f.read(14))
+        # print "dest: {}".format(dest)
+        # print "source: {}.".format(source)
         assert ether_type == 8
 
         # IP Header. go into payload and get ip versions and IP header lengths
