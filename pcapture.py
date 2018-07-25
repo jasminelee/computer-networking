@@ -48,24 +48,21 @@ with open("net.cap", "rb") as f:
 
         # # parsing the layer 2 ethernet frame
 
-        destination_mac_address_bytes1 = f.read(4)
         destination_mac_address1 = struct.unpack(
-            "<I", destination_mac_address_bytes1)[0]
-        destination_mac_address_bytes2 = f.read(2)
+            "<I", f.read(4))[0]
         destination_mac_address2 = struct.unpack(
-            "<H", destination_mac_address_bytes2)[0]
+            "<H", f.read(2))[0]
         # print "MAC destination: ", destination_mac_address1, destination_mac_address2
 
-        source_mac_address_bytes1 = f.read(4)
         source_mac_address1 = struct.unpack(
-            "<I", source_mac_address_bytes1)[0]
-
-        source_mac_address_bytes2 = f.read(2)
+            "<I", f.read(4))[0]
         source_mac_address2 = struct.unpack(
-            "<H", source_mac_address_bytes2)[0]
+            "<H", f.read(2))[0]
         # print "MAC source: ", source_mac_address1, source_mac_address2
 
-        ether_type = f.read(2)
+        ether_type = struct.unpack("<H", f.read(2))[0]
+        # print "ether_type: {}".format(ether_type)
+        assert ether_type == 8
 
         # IP Header. go into payload and get ip versions and IP header lengths
         version_field_header_length_bytes = f.read(1)
