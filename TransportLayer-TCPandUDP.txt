@@ -49,6 +49,49 @@ ICN 2.3: ICMP service model
     - UDP is encapsulated in IP datagram. 
 - "ping" and "traceroute" both rely on ICMP
 
+ICN 2.4: The End-to-End Principle
+- why doesn't the network compress data, reformate/improve requests, serve cached data, add security, etc? Bc of the end-to-end principle, which is the idea that we should leave the end points/applications to do all the work. 
+- if a package of data is corrupted in transmission, then a recipient can reject it. if a sender doesn't get acknowledgement of successful transmission via TCP, it can resend. 
+    - link error detection is designed for errors in transmission, not for errors in storage. so, end-to-end check is responsbile for correctness.
+    - TCP offers reliable byte stream. chunks are transferred and checked upon arrival end-to-end.
+- link reliability
+    - 99% of wired link layer transmissions are successful. wireless is 50-80%
+    - wireless link layers improve their reliability by using link layer acknowledgements. link layer help greatly improves TCP performance
+- "Strong" end to end: the network's job is to transmit datagrams as efficiently and flexibly as possible. don't implement improvements in the middle bc they can increase latency. everything should be done at the fringes. bc improvements to the middle means difficulty changing network designs
+
+ICN 2.5: Error detection
+- 3 schemes: checksum, CRC, and MAC
+- Checksum adds up values in a packet (IP, TCP). fast and cheap but weak guarantees as to which errors it will catch
+    - one's or two's complement. binary arithmetic to catch errors, not very robust so heavy lifting is done at the link layer vis CRC
+- Cyclic redundancy code (CRC)
+    - more robust and expensive
+    - link layers use CRC so TCP/IP can use checksum
+    - uses polynomial long division 
+- message authentication code (MAC)
+    - combines packets with secret info to generate a value. crypotographic transformation of data (TLS, transport layer security. used for HTTPS). 
+    - not as good for error detection as CRC
+- each layer has its own error detection: end to end principle! each layer needs an end to end check. ethernet needs it frames to be parsed correctly. IP packets need to be correct. 
+
+ICN 2.6a: Finite state machines 1
+- FSM Protocol Specification
+- a state is a configuration of a system
+- see TCP Connection FSM
+
+ICN 2.7: Reliable communications - stop and wait
+- Flow control needed for when sender sends more packets/sec than receiver can receive. 
+- flower control does:
+    - not send more packets than receiver can process
+    - receiver gives sender feedback
+    - two approaches:
+        - stop and wait
+        - sliding window
+- Stop and Wait
+    - at most one packet in flight at any time. sender sends one packet at a time. receiver sends acknowledgement packet when it receives data
+    - one-bit counter to detect duplicate data
+- Sliding Window
+    - generalization of stop-and-wait. allows multiple unacked segments 
+    - bound of number of un-acked segments, called a window
+
 Class 4 
 mux is shorthand for multiplexer 
 
