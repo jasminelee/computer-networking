@@ -1,0 +1,38 @@
+ICN 8.1: Intro to Network Attacks
+- Address Resolution Protocol (ARP): used to discover the link layer address, e.g. MAC address, associated with a given network layer address, e.g. IPv4
+- Dynamic Host Configuration Protocol (DHCP): used on UDP/IP networks whereby a DHCP server dynamically assigns an IP address to each device on a network
+- Security essentials:
+    - secrecy/confidentiality: no one can listen in to our communication. solved via encryption
+    - integrity. ensures communication wasn't tampered with. solved via message authentication codes (MACs)
+    - authenticity. can I be sure the other party I'm talking to is who they say they are? solved via digital signatures and certs
+    - uninterrupted communication
+- Security compromises:
+    - eavesdrop. passively "sniff" and record network data
+        - listen to wifi using wireshark bc packets are broadcasted for everyone to hear
+        - compromise a router to duplicate and forward data
+        - man-in-the-middle attacks are hard to detect bc both parties can think they're talking to a legitimate end host
+    - tamper with data
+        - changing contents of packets, redirecting packets, or taking control of end-host
+    - prevent communication - 'denial of service'
+
+ICN 8.2: Attacks at Layer 2
+- common attacks:
+    - eavesdropping with an interface in promiscuous mode, a mode at which every data packet transmitted is received and read by every network adapter.
+    - force packets to be broadcast
+    - masquerade as DHCP or ARP server. redirect packets to a different end-host
+- wifi is broadcast into the air for everyone to hear
+- ethernet uses switches. media access control (MAC) overflow attack 
+- an attacker can set up rogue DHCP server
+    - DHCP: a user makes a DHCP request to the DHCP server/router. an attacker can return a DHCP acknowledgement more quickly than the real router. 
+- an attacker can also set up a rogue ARP server. sets up man-in-the-middle attack. all traffic can go through this rogue server
+
+see MAC overflow attack example http://mininet.org/
+demo for DHCP masquerade attack: https://www.youtube.com/watch?v=_eW_SDyhj-U
+
+
+ICN 8.3: Layer 3 attacks
+- ICMP is used to convey info about the network to the source to indicate how it's doing. a router could use ICMP to tell the source that the destination was unreachable. 
+- common types of attacks:
+    - ICMP redirect messages
+    - BGP hijacking
+    - 
