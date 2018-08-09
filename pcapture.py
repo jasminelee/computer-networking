@@ -82,12 +82,13 @@ with open("net.cap", "rb") as f:
         # print "Source IP: {}, destination IP: {}".format(source_IP, destination_IP)
 
         # parsing TCP headers
-        source_port = struct.unpack("<H", f.read(2))[0]
-        destination_port = struct.unpack("<H", f.read(2))[0]
-        sequence_number = struct.unpack("<I", f.read(4))[0]
-        print sequence_number
+        source_port, destination_port, seq_number, ack_number, b12, b13, window_size, \
+            checksum, urgent_pointer = struct.unpack('<HHIIBBHHH', f.read(20))
 
-        captured_length_in_bytes -= 42
+        data_offset = (b12 >> 4) * 4  # number of bytes
+        data_start = data_offset - 12
+        # 
+        captured_length_in_bytes -= (54 + data_start)
 
         # print "Number in bytes in the rest of the packet
         # {}".format(captured_length_in_bytes)
