@@ -47,26 +47,19 @@ with open("net.cap", "rb") as f:
         assert captured_length_in_bytes == untruncated_length_in_bytes
 
         # # parsing the layer 2 ethernet frame
+
         dest, source, ether_type = struct.unpack('<6s6sH', f.read(14))
-        # print "dest: {}".format(dest)
-        # print "source: {}.".format(source)
+        # dest1, dest2, source1, source2, ether_type = struct.unpack(
+        #     '<LHLHH', f.read(14))
+        # print "dest: {}, source: {}".format(dest1, source1)
         assert ether_type == 8
 
+        # unpacking takes binary data and makes it human readable
         # IP Header. go into payload and get ip versions and IP header lengths
-        version_field_header_length_bytes = f.read(1)
-        version_field_header_length = struct.unpack(
-            "<B", version_field_header_length_bytes)[0]
-        version_field_header_length = str(version_field_header_length)
-        # print version_field_header_length
-        version_field = version_field_header_length[:len(
-            version_field_header_length) / 2]
-        # print "version field:" + version_field
-        # assert version_field == "4" or version_field == "6"
-
-        IP_header_length = version_field_header_length[
-            len(version_field_header_length) / 2:]
-        IP_header_length = int(IP_header_length) % 0xff
-        IP_header_length *= 4
+        version_field_header_length = struct.unpack("B", f.read(1))[0]
+        version_field = version_field_header_length >> 4
+        IP_header_length = version_field_header_length & 0x0f
+        assert version_field == 4
         # print "IP_header_length: {}".format(IP_header_length)
 
         differentiated_services = f.read(1)
@@ -74,23 +67,27 @@ with open("net.cap", "rb") as f:
         # length of datagram payload
         total_length = struct.unpack("<H", total_length_bytes)[
             0]
+        # print "total length: {}".format(total_length)
         id_field = f.read(2)
         offset_field = f.read(2)
         ttl = f.read(1)
         protocol_field_bytes = f.read(1)
         protocol_field = struct.unpack("<B", protocol_field_bytes)[0]
-        # print "protocol", protocol_field
-        # assert protocol_field == 6
+        assert protocol_field == 6  # indicates tcp
 
         header_checksum = f.read(2)
         source_IP = struct.unpack("<I", f.read(4))[0]
         destination_IP = struct.unpack("<I", f.read(4))[0]
-
         # should be the same two IPS
         # print "Source IP: {}, destination IP: {}".format(source_IP, destination_IP)
-        captured_length_in_bytes -= 34
 
-        # if IP_header_length > 5:
+        # parsing TCP headers
+        source_port = struct.unpack("<H", f.read(2))[0]
+        destination_port = struct.unpack("<H", f.read(2))[0]
+        sequence_number = struct.unpack("<I", f.read(4))[0]
+        print sequence_number
+
+        captured_length_in_bytes -= 42
 
         # print "Number in bytes in the rest of the packet
         # {}".format(captured_length_in_bytes)

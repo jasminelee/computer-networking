@@ -15,7 +15,7 @@ ICN 8.1: Intro to Network Attacks
         - changing contents of packets, redirecting packets, or taking control of end-host
     - prevent communication - 'denial of service'
 
-ICN 8.2: Attacks at Layer 2
+ICN 8.2: Attacks at Layer 2 (data link layer)
 - common attacks:
     - eavesdropping with an interface in promiscuous mode, a mode at which every data packet transmitted is received and read by every network adapter.
     - force packets to be broadcast
@@ -30,9 +30,11 @@ see MAC overflow attack example http://mininet.org/
 demo for DHCP masquerade attack: https://www.youtube.com/watch?v=_eW_SDyhj-U
 
 
-ICN 8.3: Layer 3 attacks
+ICN 8.3: Layer 3 attacks (transport layer)
 - ICMP is used to convey info about the network to the source to indicate how it's doing. a router could use ICMP to tell the source that the destination was unreachable. 
 - common types of attacks:
     - ICMP redirect messages
     - BGP hijacking
     - 
+
+https://blog.bradfieldcs.com/the-secret-life-of-your-login-credentials-6a254bad52ce

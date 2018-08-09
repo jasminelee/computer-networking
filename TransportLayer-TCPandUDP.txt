@@ -92,6 +92,8 @@ ICN 2.7: Reliable communications - stop and wait
     - generalization of stop-and-wait. allows multiple unacked segments 
     - bound of number of un-acked segments, called a window
 
+
+ICN 2.8: Reliable Communications - sliding window 
 Class 4 
 mux is shorthand for multiplexer 
 
