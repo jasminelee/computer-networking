@@ -10,7 +10,7 @@ with open("net.cap", "rb") as f:
     # per-file header according to
     # https://www.tcpdump.org/manpages/pcap-savefile.5.txt
     magic_number_bytes = f.read(4)
-    magic_number = binascii.hexlify(magic_number_bytes)
+    magic_number = struct.unpack('4s', magic_number_bytes)
     print "Magic number: {}".format(magic_number)
 
     major_version_bytes = f.read(2)
@@ -51,8 +51,8 @@ with open("net.cap", "rb") as f:
 
         dest, source, ether_type = struct.unpack('<6s6sH', f.read(14))
         # dest1, dest2, source1, source2, ether_type = struct.unpack(
-        #     '<LHLHH', f.read(14))
-        # print "dest: {}, source: {}".format(dest1, source1)
+        # '<LHLHH', f.read(14))
+        # print "dest: {}, source: {}".format(dest1 + dest2, source1+source2)
         assert ether_type == 8
 
         # unpacking takes binary data and makes it human readable
@@ -80,8 +80,8 @@ with open("net.cap", "rb") as f:
         source_IP = struct.unpack("<I", f.read(4))[0]
         destination_IP = struct.unpack("<I", f.read(4))[0]
         # should be the same two IPS
-        # print "Source IP: {}, destination IP: {}".format(source_IP,
-        # destination_IP)
+        print "Source IP: {}, destination IP: {}".format(source_IP,
+                                                         destination_IP)
 
         # parsing TCP headers
         source_port, destination_port, seq_number, ack_number, b12, b13, window_size, \
