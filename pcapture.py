@@ -7,7 +7,8 @@ https://my.bradfieldcs.com/networking/2018-07/overview-exercise/
 
 with open("net.cap", "rb") as f:
 
-    # per-file header according to https://www.tcpdump.org/manpages/pcap-savefile.5.txt
+    # per-file header according to
+    # https://www.tcpdump.org/manpages/pcap-savefile.5.txt
     magic_number_bytes = f.read(4)
     magic_number = binascii.hexlify(magic_number_bytes)
     print "Magic number: {}".format(magic_number)
@@ -79,16 +80,17 @@ with open("net.cap", "rb") as f:
         source_IP = struct.unpack("<I", f.read(4))[0]
         destination_IP = struct.unpack("<I", f.read(4))[0]
         # should be the same two IPS
-        # print "Source IP: {}, destination IP: {}".format(source_IP, destination_IP)
+        # print "Source IP: {}, destination IP: {}".format(source_IP,
+        # destination_IP)
 
         # parsing TCP headers
         source_port, destination_port, seq_number, ack_number, b12, b13, window_size, \
             checksum, urgent_pointer = struct.unpack('<HHIIBBHHH', f.read(20))
 
-        data_offset = (b12 >> 4) * 4  # number of bytes
-        data_start = data_offset - 12
-        # 
-        captured_length_in_bytes -= (54 + data_start)
+        data_offset = (b12 >> 4)  # * 4  # number of bytes
+        options = (data_offset * 4) - 20
+        f.read(options)
+        captured_length_in_bytes -= (54 + options)
 
         # print "Number in bytes in the rest of the packet
         # {}".format(captured_length_in_bytes)
